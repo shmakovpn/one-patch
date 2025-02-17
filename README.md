@@ -3,6 +3,9 @@
 ![Tests](https://github.com/shmakovpn/one-patch/actions/workflows/python-package.yml/badge.svg)
 [![codecov](https://codecov.io/github/shmakovpn/one-patch/graph/badge.svg?token=744XXMAKOZ)](https://codecov.io/github/shmakovpn/one-patch)
 ![Mypy](https://github.com/shmakovpn/one-patch/actions/workflows/python-package.yml/badge.svg)
+[![pypi](https://img.shields.io/pypi/v/one-patch.svg)](https://pypi.python.org/pypi/one-patch)
+[![downloads](https://static.pepy.tech/badge/one-patch/month)](https://pepy.tech/project/one-patch)
+[![versions](https://img.shields.io/pypi/pyversions/one-patch.svg)](https://github.com/shmakovpn/one-patch)
 
 Unit-test writing revolution!!
 
