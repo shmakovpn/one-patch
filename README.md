@@ -380,6 +380,26 @@ def test_op_shortcut__success_method():
         op.c(*op.args)
 ```
 
+`Ol` is `Op` + `PatchLogger`.
+
+```py
+from one_patch import Op, PatchLogger
+import one_patch.testing_fixtures as tm  # tm means `testing module`
+
+# this long way may be shorter
+with Op(tm.FirstClass.success_method) as (op, c, args, s):
+    with PatchLogger(tm.logger) as logger:
+        result = c(*args)
+```
+
+```py
+from one_patch import Ol
+import one_patch.testing_fixtures as tm  # tm means `testing module`
+
+with Ol(tm.FirstClass.success_method) as (op, c, args, s):
+    result = c(*args)  # Ol already included PatchLogger
+```
+
 `Oc` automatically perform `r = op.c(*op.args)`. 
 Use `Oc` instead of `Op` or `OnePatch`. 
 This is more short and convenient way.

@@ -562,7 +562,7 @@ class Ol(Op):
     # this long way may be shorter
     with Op(tm.f) as (op, c, args, s):
         with PatchLogger(tm.logger) as logger:
-            result = c(*ars)
+            result = c(*args)
     ```
 
     ```py
