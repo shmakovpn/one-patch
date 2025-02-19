@@ -238,6 +238,15 @@ class TestOnePatch:
             with pytest.raises(TypeError):
                 op.c(*op.args)
 
+    def test_some_property(self):
+        """
+        Minimal test (without asserts) for `FirstClass.some_property`.
+
+        Use `fget` attribute of `property` to get value of `some_property`
+        """
+        with OnePatch(tm.FirstClass.some_property.fget) as op:
+            assert op.c(*op.args) == 'hello'
+
     def test_second_success_method(self):
         """
         Minimal test (without asserts) for `FirstClass.SecondClass.second_success_method`
@@ -505,7 +514,11 @@ class TestOnePatch:
 
         # region exclude_set
         with OnePatch(tm.InitCase.use_attrs_inited_in__init, exclude_set={tm.InitCase.__init__}) as op:
+            # if you exclude a callable object, you can use this object to access it in op.exclusions.
+            # Also, you can use the callable object in `exclude_set`
             op.exclusions[tm.InitCase.__init__].c(*op.exclusions[tm.InitCase.__init__].args)
+            # op.exclusions[tm.InitCase.__init__] is the same as op.exclusions['InitCase.__init__']
+            assert op.exclusions[tm.InitCase.__init__] is op.exclusions['InitCase.__init__']
             op.c(*op.args)
 
         with OnePatch(tm.InitCase.use_attrs_inited_in__init, exclude_set={'InitCase.__init__'}) as op:

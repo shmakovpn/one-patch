@@ -129,6 +129,10 @@ class FirstClass:
         # calls `failed_function` with wrong signature, will raise TypeError
         failed_function()  # noqa
 
+    @property
+    def some_property(self):
+        return 'hello'
+
     class SecondClass:
         second_class_const = '_second_class_const'
 

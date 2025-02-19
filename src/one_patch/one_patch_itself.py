@@ -140,7 +140,7 @@ class OnePatchDTO:
     """
     c: Callable
     """callable, you have to call in your unit-test like: `op.c(*op.args)`"""
-    exclusions: Dict[Union[Callable, IdentifierPath], Union[CallableDTO, NotCallableDTO]]
+    exclusions: Dict[Union[Callable, IdentifierPath, str], Union[CallableDTO, NotCallableDTO]]
     """The list of arguments for excluded callable"""
 
     def __iter__(self):
@@ -175,7 +175,7 @@ class OnePatch:
     from one_patch import OnePatch
 
     with OnePatch(tm.my_func) as oc:
-        # all scope around of tm.my_func will me mocked
+        # all scope around of tm.my_func will be mocked
         # op.c - callable you need to use in your unit-tests
         # op.args - mocked argument list you need to use in your unit-tests
         result = op.c(*op.args)  # call testing method or function
@@ -315,7 +315,7 @@ class OnePatch:
         )
         self._patch_include_set(testing_module=testing_module)
 
-        exclusions: Dict[Union[Callable, IdentifierPath], Union[CallableDTO, NotCallableDTO]] = {}
+        exclusions: Dict[Union[Callable, IdentifierPath, str], Union[CallableDTO, NotCallableDTO]] = {}
         all_exclude_set = self._exclude_path_set | self._exclude_object_path_set
 
         exclude_path: IdentifierPath
@@ -500,7 +500,7 @@ class OnePatch:
 
             if isinstance(getattr(parent, identifier_path.split('.')[-1], None), Mock):
                 # noinspection SpellCheckingInspection
-                continue  # python 3.10 does not not support autospec on that already mocked
+                continue  # python 3.10 does not support autospec on that already mocked
 
             patcher = patch.object(parent, identifier_path.split('.')[-1], create=True)
             patcher.__enter__()
@@ -574,7 +574,7 @@ class Oc(Op):
     """
     `Oc` automatically perform `r = op.c(*op.args)`.
     Its `__enter__` returns `ResultOnePatchDTO` which `r` attribute contains the result of `op.c(*op.args)`.
-    Thus `Oc` is more short version of `OnePatch`.
+    Thus, `Oc` is more short version of `OnePatch`.
     """
     def __enter__(self) -> ResultOnePatchDTO:
         op: OnePatchDTO = super().__enter__()
@@ -592,7 +592,7 @@ class Oc(Op):
 class Ocl(Op):
     """
     `Ocl` extends `OnePatch` for testing code, that including logging.
-    `Ocl` work like `Oc`, it perform `r = op.c(*op.args)` automatically.
+    `Ocl` work like `Oc`, it performs `r = op.c(*op.args)` automatically.
     It is very easy to make a mistake in message template and other arguments, like `logger.debug("%s %s", arg1)`.
     This code will produce `TypeError: not enough arguments for format string`. We need to patch `debug` method.
 
