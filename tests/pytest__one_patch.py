@@ -36,7 +36,7 @@ class TestOnePatch:
     """
     Unit-tests for OnePatch itself and at the same time helpful examples, how to work this OnePatch.
 
-    Here we will testing `one_patch_data/testing_fixtures.py` module
+    Here we will test `one_patch_data/testing_fixtures.py` module
     """
 
     def test_module_const(self):
@@ -44,7 +44,7 @@ class TestOnePatch:
         All identifiers (variables) in testing module `one_patch_data/testing_fixtures.py` have to be mocked,
         including string constant `MODULE_CONST`.
 
-        Lets check, that `MODULE_CONST` become a Mock
+        Let's check, that `MODULE_CONST` become a Mock
         """
         with OnePatch(tm.FirstClass.success_method):
             assert isinstance(tm.MODULE_CONST, NonCallableMock)
@@ -54,7 +54,7 @@ class TestOnePatch:
         All attributes in classes in testing module `one_patch_data/testing_fixtures.py` have to be mocked,
         including string constant `FirstClass.first_class_const`.
 
-        Lets check, that `FirstClass.first_class_const` become a Mock.
+        Let's check, that `FirstClass.first_class_const` become a Mock.
         """
         with OnePatch(tm.FirstClass.success_method) as op:
             assert isinstance(op.args[0].first_class_const, NonCallableMock)
@@ -65,7 +65,7 @@ class TestOnePatch:
         including string constant `FirstClass.SecondClass.second_class_const`.
         This mocking is not performing directly, see comments in this test, to learn how to access to mocked attributes.
 
-        Lets check, that `FirstClass.SecondClass.second_class_const` become a Mock.
+        Let's check, that `FirstClass.SecondClass.second_class_const` become a Mock.
         """
         with OnePatch(tm.FirstClass.success_method) as op:
             # Note: op.args[0] == op.args.self
@@ -82,7 +82,7 @@ class TestOnePatch:
         including `FirstClass.SecondClass`.
         This mocking is not performing directly, see comments in this test, to learn how to access to mocked attributes.
 
-        Lets check, that `FirstClass.SecondClass` become a Mock.
+        Let's check, that `FirstClass.SecondClass` become a Mock.
         """
         with OnePatch(tm.FirstClass.success_method) as op:
             # Note: op.args[0] == op.args.self
@@ -464,7 +464,7 @@ class TestOnePatch:
         """
         `x` and `y` attribute creates in `__init__`, these are not attributes of the class,
         and can not be mocked by default using `autospec=True`.
-        `tm.InitCase.use_attrs_inited_in__init` try to access these attributes, so `AttributeError` will raised.
+        `tm.InitCase.use_attrs_inited_in__init` try to access these attributes, so `AttributeError` will raise.
 
         Solutions:
           0. Refactoring, create these attributes in class `InitCase`:

@@ -16,6 +16,7 @@ __all__ = (
     'OnePatchDTO',
     'OnePatch',
     'Op',
+    'Ol',
     'ResultOnePatchDTO',
     'Oc',
     'Ocl',
@@ -274,7 +275,7 @@ class OnePatch:
             exclude_object for exclude_object in self._exclude_set
             if not isinstance(exclude_object, str)
         }
-        self._exclude_path_set: Set[Union[IdentifierName, Callable]] = self._exclude_path_set | exclude_path_set
+        self._exclude_path_set: Set[IdentifierPath] = self._exclude_path_set | exclude_path_set
         self._exclude_identifier_set = self._exclude_identifier_set | exclude_identifier_set
         self._exclude_object_set = self._exclude_object_set | exclude_object_set
         self._exclude_object_path_set = {
@@ -553,6 +554,35 @@ class Op(OnePatch):
     pass
 
 
+class Ol(Op):
+    """
+    Shortcut for OnePatch + PatchLogger
+
+    ```py
+    # this long way may be shorter
+    with Op(tm.f) as (op, c, args, s):
+        with PatchLogger(tm.logger) as logger:
+            result = c(*ars)
+    ```
+
+    ```py
+    with Ol(tm.f) as (op, c, args, s):
+        result = c(*args)
+    ```
+    """
+    def __enter__(self) -> OnePatchDTO:
+        testing_module: ModuleType = self._get_testing_module()
+        logger_: logging.Logger = getattr(testing_module, 'logger')
+        self._patch_logger_manager = PatchLogger(logger=logger_).__enter__()
+        return super().__enter__()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self._patch_logger_manager:
+            self._patch_logger_manager.__exit__(None, None, None)
+            self._patch_logger_manager = None
+        super().__exit__(exc_type, exc_val, exc_tb)
+
+
 @dataclasses.dataclass
 class ResultOnePatchDTO(OnePatchDTO):
     """OnePatchDTO with result of `op.c(*op.args)`"""
@@ -593,7 +623,7 @@ class Ocl(Op):
     """
     `Ocl` extends `OnePatch` for testing code, that including logging.
     `Ocl` work like `Oc`, it performs `r = op.c(*op.args)` automatically.
-    It is very easy to make a mistake in message template and other arguments, like `logger.debug("%s %s", arg1)`.
+    It is very easy to make a mistake in message template and other arguments, like `logger.debug("%s-%s", arg1)`.
     This code will produce `TypeError: not enough arguments for format string`. We need to patch `debug` method.
 
     Long example, without Ocl
