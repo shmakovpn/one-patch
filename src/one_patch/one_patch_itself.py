@@ -146,7 +146,7 @@ class OnePatchDTO:
 
     def __iter__(self):
         """
-        with OnePatch(f) as oc, c, args, s:
+        with OnePatch(f) as (op, c, args, s):
             assert op.c == c
             assert op.args == args
             assert op.args.self == s  # or assert op.args.cls == s
